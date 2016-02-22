@@ -11,6 +11,10 @@ solution "recastnavigation"
 		"Debug",
 		"Release"
 	}
+	platforms {
+		"x86",
+		"x64"
+	}
 	location (todir)
 
 	-- extra warnings, no exceptions or rtti
@@ -148,7 +152,10 @@ project "RecastDemo"
 	-- windows library cflags and libs
 	configuration { "windows" }
 		includedirs { "../RecastDemo/Contrib/SDL/include" }
-		libdirs { "../RecastDemo/Contrib/SDL/lib/x86" }
+		filter { "platforms:x86" }
+			libdirs { "../RecastDemo/Contrib/SDL/lib/x86" }
+		filter { "platforms:x64" }
+			libdirs { "../RecastDemo/Contrib/SDL/lib/x64" }
 		debugdir "../RecastDemo/Bin/"
 		links { 
 			"glu32",
@@ -156,10 +163,16 @@ project "RecastDemo"
 			"SDL2",
 			"SDL2main",
 		}
-		postbuildcommands {
-			-- Copy the SDL2 dll to the Bin folder.
-			'{COPY} "%{wks.location}../../Contrib/SDL/lib/x86/SDL2.dll" "%{cfg.targetdir}"'
-		}
+		filter { "platforms:x86" }
+			postbuildcommands {
+				-- Copy the SDL2 dll to the Bin folder.
+				'{COPY} "%{wks.location}../../Contrib/SDL/lib/x86/SDL2.dll" "%{cfg.targetdir}"'
+			}
+		filter { "platforms:x64" }
+			postbuildcommands {
+				-- Copy the SDL2 dll to the Bin folder.
+				'{COPY} "%{wks.location}../../Contrib/SDL/lib/x64/SDL2.dll" "%{cfg.targetdir}"'
+			}
 
 	-- mac includes and libs
 	configuration { "macosx" }
@@ -226,7 +239,10 @@ project "Tests"
 	-- windows library cflags and libs
 	configuration { "windows" }
 		includedirs { "../RecastDemo/Contrib/SDL/include" }
-		libdirs { "../RecastDemo/Contrib/SDL/lib/x86" }
+		filter { "platforms:x86" }
+			libdirs { "../RecastDemo/Contrib/SDL/lib/x86" }
+		filter { "platforms:x64" }
+			libdirs { "../RecastDemo/Contrib/SDL/lib/x64" }
 		debugdir "../RecastDemo/Bin/"
 		links { 
 			"glu32",
