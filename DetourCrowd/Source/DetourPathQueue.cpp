@@ -28,10 +28,10 @@ dtPathQueue::dtPathQueue() :
 	m_nextHandle(1),
 	m_maxPathSize(0),
 	m_queueHead(0),
-	m_navquery(0)
+	m_navquery(nullptr)
 {
 	for (int i = 0; i < MAX_QUEUE; ++i)
-		m_queue[i].path = 0;
+		m_queue[i].path = nullptr;
 }
 
 dtPathQueue::~dtPathQueue()

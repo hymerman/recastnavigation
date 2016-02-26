@@ -513,8 +513,8 @@ void duAppendCross(struct duDebugDraw* dd, const float x, const float y, const f
 }
 
 duDisplayList::duDisplayList(int cap) :
-	m_pos(0),
-	m_color(0),
+	m_pos(nullptr),
+	m_color(nullptr),
 	m_size(0),
 	m_cap(0),
 	m_depthMask(true),

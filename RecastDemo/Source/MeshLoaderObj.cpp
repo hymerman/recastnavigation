@@ -25,9 +25,9 @@
 
 rcMeshLoaderObj::rcMeshLoaderObj() :
 	m_scale(1.0f),
-	m_verts(0),
-	m_tris(0),
-	m_normals(0),
+	m_verts(nullptr),
+	m_tris(nullptr),
+	m_normals(nullptr),
 	m_vertCount(0),
 	m_triCount(0)
 {

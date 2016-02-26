@@ -12,7 +12,7 @@
 dtTileCache* dtAllocTileCache()
 {
 	void* mem = dtAlloc(sizeof(dtTileCache), DT_ALLOC_PERM);
-	if (!mem) return 0;
+	if (!mem) return nullptr;
 	return new(mem) dtTileCache;
 }
 
@@ -42,7 +42,7 @@ inline int computeTileHash(int x, int y, const int mask)
 
 struct NavMeshTileBuildContext
 {
-	inline NavMeshTileBuildContext(struct dtTileCacheAlloc* a) : layer(0), lcset(0), lmesh(0), alloc(a) {}
+	inline NavMeshTileBuildContext(struct dtTileCacheAlloc* a) : layer(nullptr), lcset(nullptr), lmesh(nullptr), alloc(a) {}
 	inline ~NavMeshTileBuildContext() { purge(); }
 	void purge()
 	{
