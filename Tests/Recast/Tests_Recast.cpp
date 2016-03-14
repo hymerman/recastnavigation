@@ -1,6 +1,9 @@
 #include "catch.hpp"
 
 #include "Recast.h"
+#include "RecastAssert.h"
+
+#include <functional>
 
 TEST_CASE("rcSwap")
 {
