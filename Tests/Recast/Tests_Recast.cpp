@@ -828,3 +828,100 @@ TEST_CASE("rcRasterizeTriangles")
 		REQUIRE(!solid.spans[1 + 2 * width]->next);
 	}
 }
+
+using scopedHeightfield = std::unique_ptr<rcHeightfield, std::function<void(rcHeightfield*)>>;
+using scopedCompactHeightfield = std::unique_ptr<rcCompactHeightfield, std::function<void(rcCompactHeightfield*)>>;
+using scopedPolyMesh = std::unique_ptr<rcPolyMesh, std::function<void(rcPolyMesh*)>>;
+using scopedDetailPolyMesh = std::unique_ptr<rcPolyMeshDetail, std::function<void(rcPolyMeshDetail*)>>;
+using scopedContourSet = std::unique_ptr<rcContourSet, std::function<void(rcContourSet*)>>;
+
+TEST_CASE("rcBuildPolyMeshDetail")
+{
+	recast::SetAssertHandler([](const char* file, const int line, const char* message) -> recast::AssertionFailureResponse::Enum
+	{
+		throw std::runtime_error(std::string("Assertion failed: \"") + message + "\" (" + file + ":" + std::to_string(line) + ")");
+	} );
+
+	rcContext ctx;
+	float verts[] = {
+		 10, 0,  10,
+		 10, 0, -10,
+		-10, 0, -10,
+		-10, 0,  10
+	};
+	int nverts = 4;
+	int tris[] = {
+		0, 1, 2,
+		0, 2, 1
+	};
+	int ntris = 2;
+	unsigned char areas[] = {
+		0,
+		0
+	};
+	float bmin[3];
+	float bmax[3];
+	rcCalcBounds(verts, 4, bmin, bmax);
+
+	float cellSize = 0.5f;
+	float cellHeight = 0.5f;
+
+	int width;
+	int height;
+
+	rcCalcGridSize(bmin, bmax, cellSize, &width, &height);
+
+	float walkableSlopeAngle = 45.0f;
+
+	rcMarkWalkableTriangles(&ctx, walkableSlopeAngle, verts, nverts, tris, ntris, areas);
+
+	scopedHeightfield heightfield(rcAllocHeightfield(), rcFreeHeightField);
+	REQUIRE(rcCreateHeightfield(&ctx, *heightfield, width, height, bmin, bmax, cellSize, cellHeight));
+
+	int flagMergeThr = 1;
+
+	REQUIRE(rcRasterizeTriangles(&ctx, verts, 4, tris, areas, 2, *heightfield, flagMergeThr));
+
+	//rcFilterLowHangingWalkableObstacles(&ctx, walkableClimb, *heightfield);
+	//rcFilterLedgeSpans(&ctx, walkableHeight, walkableClimb, *heightfield);
+	//rcFilterWalkableLowHeightSpans(&ctx, walkableHeight, *heightfield);
+
+	int walkableHeight = 1;
+	int walkableClimb = 1;
+
+	scopedCompactHeightfield compactHeightfield(rcAllocCompactHeightfield(), rcFreeCompactHeightfield);
+	REQUIRE(rcBuildCompactHeightfield(&ctx, walkableHeight, walkableClimb, *heightfield, *compactHeightfield));
+
+	int walkableRadius = 1;
+
+	REQUIRE(rcErodeWalkableArea(&ctx, walkableRadius, *compactHeightfield));
+
+	int minRegionArea = 1;
+	int mergeRegionArea = 1;
+
+	REQUIRE(rcBuildRegionsMonotone(&ctx, *compactHeightfield, 0, minRegionArea, mergeRegionArea));
+
+	float maxError = 1.3f;
+	int maxEdgeLen = 10;
+	int buildFlags = RC_CONTOUR_TESS_WALL_EDGES;
+
+	scopedContourSet contourSet(rcAllocContourSet(), rcFreeContourSet);
+	REQUIRE(rcBuildContours(&ctx, *compactHeightfield, maxError, maxEdgeLen, *contourSet, buildFlags));
+
+
+	int nvp = 3;
+	scopedPolyMesh polyMesh(rcAllocPolyMesh(), rcFreePolyMesh);
+	REQUIRE(rcBuildPolyMesh(&ctx, *contourSet, nvp, *polyMesh));
+
+	// To try to catch an uninitialized memory read when sampleDist==0
+	SECTION("Zero sampleDist")
+	{
+		scopedDetailPolyMesh polyMeshDetail(rcAllocPolyMeshDetail(), rcFreePolyMeshDetail);
+		const float sampleDist = 0;
+		const float sampleMaxError = 0;
+		const bool success = rcBuildPolyMeshDetail(&ctx, *polyMesh, *compactHeightfield, sampleDist, sampleMaxError, *polyMeshDetail);
+
+		// Expect this to fail!
+		REQUIRE(!success);
+	}
+}
