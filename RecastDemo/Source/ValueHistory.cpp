@@ -54,7 +54,10 @@ void GraphParams::setValueRange(float ivmin, float ivmax, int indiv, const char*
 	vmin = ivmin;
 	vmax = ivmax;
 	ndiv = indiv;
-	strcpy(units, iunits);
+	if (strlen(iunits) + 1 < 16)
+	{
+		strcpy(units, iunits);
+	}
 }
 
 void drawGraphBackground(const GraphParams* p)
