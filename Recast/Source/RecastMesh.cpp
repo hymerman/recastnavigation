@@ -995,6 +995,12 @@ bool rcBuildPolyMesh(rcContext* ctx, rcContourSet& cset, const int nvp, rcPolyMe
 	
 	rcScopedTimer timer(ctx, RC_TIMER_BUILD_POLYMESH);
 
+	if(nvp <= 2)
+	{
+		ctx->log(RC_LOG_ERROR, "rcBuildPolyMesh: number of vertices per poly too low; must be 3 or greater but is %d", nvp);
+		return false;
+	}
+
 	rcVcopy(mesh.bmin, cset.bmin);
 	rcVcopy(mesh.bmax, cset.bmax);
 	mesh.cs = cset.cs;

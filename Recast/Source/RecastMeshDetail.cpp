@@ -1176,6 +1176,12 @@ bool rcBuildPolyMeshDetail(rcContext* ctx, const rcPolyMesh& mesh, const rcCompa
 	
 	if (mesh.nverts == 0 || mesh.npolys == 0)
 		return true;
+
+	if (mesh.nvp <= 2)
+	{
+		ctx->log(RC_LOG_ERROR, "rcBuildPolyMeshDetail: number of vertices per poly too low; must be 3 or greater but is %d", mesh.nvp);
+		return false;
+	}
 	
 	const int nvp = mesh.nvp;
 	const float cs = mesh.cs;
