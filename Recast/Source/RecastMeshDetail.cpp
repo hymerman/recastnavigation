@@ -640,6 +640,8 @@ static bool buildPolyDetail(rcContext* ctx, const float* in, const int nin,
 							const rcHeightPatch& hp, float* verts, int& nverts,
 							rcIntArray& tris, rcIntArray& edges, rcIntArray& samples)
 {
+	rcAssert(nin > 2);
+
 	static const int MAX_VERTS = 127;
 	static const int MAX_TRIS = 255;	// Max tris for delaunay is 2n-2-k (n=num verts, k=num hull verts).
 	static const int MAX_VERTS_PER_EDGE = 32;
