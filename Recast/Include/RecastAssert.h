@@ -19,15 +19,106 @@
 #ifndef RECASTASSERT_H
 #define RECASTASSERT_H
 
-// Note: This header file's only purpose is to include define assert.
-// Feel free to change the file and include your own implementation instead.
+#pragma once
 
-#ifdef NDEBUG
-// From http://cnicholson.net/2009/02/stupid-c-tricks-adventures-in-assert/
-#	define rcAssert(x) do { (void)sizeof(x); } while((void)(__LINE__==-1),false)  
-#else
-#	include <assert.h> 
-#	define rcAssert assert
+#if !defined WIN32
+#include <signal.h>
 #endif
+//------------------------------------------------------------------------------
+
+namespace recast {
+
+// Returned by an assert handler to indicate whether execution should be halted, or allowed to continue.
+namespace AssertionFailureResponse
+{
+	enum Enum
+	{
+		Halt,
+		Continue,
+	};
+}
+
+typedef AssertionFailureResponse::Enum(*AssertHandler)(const char* file, const int line, const char* message);
+
+// Get and set the global assert handler, called when an assertion fails.
+// A default implementation is provided which logs the assert to the console, then halts.
+const AssertHandler& GetAssertHandler();
+void SetAssertHandler(AssertHandler handler);
+
+namespace internal {
+// Only to be called by the assert macro.
+AssertionFailureResponse::Enum ReportAssertionFailure(const char* file, const int line, const char* message, ...);
+}
+
+} // namespace recast
+
+//------------------------------------------------------------------------------
+
+// Use RECAST_ASSERTS_ENABLED to control whether asserts should have any effect.
+// Defaults to being on in development and debug configurations, off in release.
+#ifndef RECAST_ASSERTS_ENABLED
+	#define RECAST_ASSERTS_ENABLED !NDEBUG
+#endif
+
+#ifdef _MSC_VER
+#	define RECAST_INLINE_PRAGMA(x) __pragma(x) // x is intentionally not wrapped; __pragma rejects expressions beginning with '('.
+#else
+#	define RECAST_INLINE_PRAGMA(x)
+#endif
+
+#define RECAST_MACRO_BEGIN do {
+
+#define RECAST_MACRO_END \
+	} RECAST_INLINE_PRAGMA(warning(push)) RECAST_INLINE_PRAGMA(warning(disable:4127)) while (0) RECAST_INLINE_PRAGMA(warning(pop))
+
+// This creative trickery taken from this StackOverflow answer:
+// http://stackoverflow.com/questions/4030959/will-a-variablename-c-statement-be-a-no-op-at-all-times/4030983#4030983
+#define RECAST_UNUSED(x)\
+	RECAST_MACRO_BEGIN\
+		((void)(true ? 0 : ((x), void(), 0)));\
+	RECAST_MACRO_END
+
+#if defined WIN32
+	#define RECAST_DEBUGBREAK() __debugbreak()
+#else
+	#define RECAST_DEBUGBREAK() raise(SIGTRAP)
+#endif
+
+#if RECAST_ASSERTS_ENABLED
+
+	#define RECAST_ASSERT_FAIL(message, ...)\
+		RECAST_MACRO_BEGIN\
+			if(recast::internal::ReportAssertionFailure(__FILE__, __LINE__, (message), __VA_ARGS__) == recast::AssertionFailureResponse::Halt)\
+			{\
+				RECAST_DEBUGBREAK();\
+			}\
+		RECAST_MACRO_END
+
+	#define RECAST_ASSERT_MESSAGE(cond, message, ...)\
+		RECAST_MACRO_BEGIN\
+			if(!(cond))\
+			{\
+				RECAST_ASSERT_FAIL(message, __VA_ARGS__);\
+			}\
+		RECAST_MACRO_END
+
+#else
+
+	#define RECAST_ASSERT_FAIL(message, ...)\
+		RECAST_MACRO_BEGIN\
+			RECAST_UNUSED(message);\
+		RECAST_MACRO_END
+
+	#define RECAST_ASSERT_MESSAGE(condition, message, ...)\
+		RECAST_MACRO_BEGIN\
+			RECAST_UNUSED(condition);\
+			RECAST_UNUSED(message);\
+		RECAST_MACRO_END
+
+#endif
+
+#define rcAssert(cond) RECAST_ASSERT_MESSAGE(cond, #cond)
+
+//------------------------------------------------------------------------------
 
 #endif // RECASTASSERT_H
