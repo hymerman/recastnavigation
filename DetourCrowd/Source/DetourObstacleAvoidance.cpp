@@ -217,6 +217,7 @@ dtObstacleAvoidanceQuery::dtObstacleAvoidanceQuery() :
 	m_segments(0),
 	m_nsegments(0)
 {
+	memset(&m_params, 0, sizeof(dtObstacleAvoidanceParams));
 }
 
 dtObstacleAvoidanceQuery::~dtObstacleAvoidanceQuery()

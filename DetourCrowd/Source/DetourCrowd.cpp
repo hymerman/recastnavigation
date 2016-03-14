@@ -342,6 +342,7 @@ dtCrowd::dtCrowd() :
 	m_velocitySampleCount(0),
 	m_navquery(0)
 {
+	memcpy(&m_obstacleQueryParams, 0, sizeof(dtObstacleAvoidanceParams));
 }
 
 dtCrowd::~dtCrowd()
