@@ -559,6 +559,8 @@ inline int next(int i, int n) { return i+1 < n ? i+1 : 0; }
 
 static void triangulateHull(const int /*nverts*/, const float* verts, const int nhull, const int* hull, rcIntArray& tris)
 {
+	rcAssert(nhull > 0);
+
 	int start = 0, left = 1, right = nhull-1;
 	
 	// Start from an ear with shortest perimeter.
