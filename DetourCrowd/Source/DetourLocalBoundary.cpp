@@ -29,6 +29,7 @@ dtLocalBoundary::dtLocalBoundary() :
 	m_npolys(0)
 {
 	dtVset(m_center, FLT_MAX,FLT_MAX,FLT_MAX);
+	memset(m_segs, 0, sizeof(Segment) * MAX_LOCAL_SEGS);
 }
 
 dtLocalBoundary::~dtLocalBoundary()

@@ -54,6 +54,7 @@ Sample_SoloMesh::Sample_SoloMesh() :
 	m_dmesh(0),
 	m_drawMode(DRAWMODE_NAVMESH)
 {
+	memset(&m_cfg, 0, sizeof(rcConfig));
 	setTool(new NavMeshTesterTool);
 }
 		

@@ -112,6 +112,8 @@ InputGeom::InputGeom() :
 	m_offMeshConCount(0),
 	m_volumeCount(0)
 {
+	memset(&m_buildSettings, 0, sizeof(BuildSettings));
+	memset(m_volumes, 0, sizeof(ConvexVolume) * MAX_VOLUMES);
 }
 
 InputGeom::~InputGeom()

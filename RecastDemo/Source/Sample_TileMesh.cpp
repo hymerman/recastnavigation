@@ -194,6 +194,7 @@ Sample_TileMesh::Sample_TileMesh() :
 	m_tileMemUsage(0),
 	m_tileTriCount(0)
 {
+	memset(&m_cfg, 0, sizeof(rcConfig));
 	resetCommonSettings();
 	memset(m_lastBuiltTileBmin, 0, sizeof(m_lastBuiltTileBmin));
 	memset(m_lastBuiltTileBmax, 0, sizeof(m_lastBuiltTileBmax));
