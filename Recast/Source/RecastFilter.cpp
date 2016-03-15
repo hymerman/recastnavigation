@@ -20,6 +20,7 @@
 #include <math.h>
 #include <stdio.h>
 #include "Recast.h"
+#include "RecastDefines.h"
 #include "RecastAssert.h"
 
 /// @par
@@ -46,7 +47,7 @@ void rcFilterLowHangingWalkableObstacles(rcContext* ctx, const int walkableClimb
 	{
 		for (int x = 0; x < w; ++x)
 		{
-			rcSpan* ps = 0;
+			rcSpan* ps = RC_NULL;
 			bool previousWalkable = false;
 			unsigned char previousArea = RC_NULL_AREA;
 			

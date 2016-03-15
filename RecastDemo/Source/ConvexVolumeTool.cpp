@@ -18,18 +18,13 @@
 
 #define _USE_MATH_DEFINES
 #include <math.h>
-#include <stdio.h>
-#include <string.h>
 #include <float.h>
-#include "SDL.h"
-#include "SDL_opengl.h"
 #include "imgui.h"
 #include "ConvexVolumeTool.h"
 #include "InputGeom.h"
 #include "Sample.h"
 #include "Recast.h"
-#include "RecastDebugDraw.h"
-#include "DetourDebugDraw.h"
+#include "RecastDefines.h"
 
 #ifdef WIN32
 #	define snprintf _snprintf
@@ -99,7 +94,7 @@ static int pointInPoly(int nvert, const float* verts, const float* p)
 
 
 ConvexVolumeTool::ConvexVolumeTool() :
-	m_sample(0),
+	m_sample(RC_NULL),
 	m_areaType(SAMPLE_POLYAREA_GRASS),
 	m_polyOffset(0.0f),
 	m_boxHeight(6.0f),

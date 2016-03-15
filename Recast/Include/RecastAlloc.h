@@ -19,6 +19,8 @@
 #ifndef RECASTALLOC_H
 #define RECASTALLOC_H
 
+#include "RecastDefines.h"
+
 #include <stddef.h>
 
 /// Provides hint values to the memory allocator on how long the
@@ -73,11 +75,11 @@ class rcIntArray
 
 public:
 	/// Constructs an instance with an initial array size of zero.
-	rcIntArray() : m_data(0), m_size(0), m_cap(0) {}
+	rcIntArray() : m_data(RC_NULL), m_size(0), m_cap(0) {}
 
 	/// Constructs an instance initialized to the specified size.
 	///  @param[in]		n	The initial size of the integer array.
-	rcIntArray(int n) : m_data(0), m_size(0), m_cap(0) { resize(n); }
+	rcIntArray(int n) : m_data(RC_NULL), m_size(0), m_cap(0) { resize(n); }
 	~rcIntArray() { rcFree(m_data); }
 
 	/// Specifies the new size of the integer array.
@@ -126,7 +128,7 @@ template<class T> class rcScopedDelete
 public:
 
 	/// Constructs an instance with a null pointer.
-	inline rcScopedDelete() : ptr(0) {}
+	inline rcScopedDelete() : ptr(RC_NULL) {}
 
 	/// Constructs an instance with the specified pointer.
 	///  @param[in]		p	An pointer to an allocated array.

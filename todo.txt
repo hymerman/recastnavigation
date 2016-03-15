@@ -1,0 +1,16 @@
+
+Split classes into separate headers
+Fix all #includes, use forward declarations
+Fix all formatting, include .clang-format
+
+Refs instead of pointers
+Const correctness
+Signed/unsigned/size of ints
+Concrete int types/typedefs instead of ints for handles
+Scoped deleters for FILE, memory
+
+C++11:
+#define RC_DELETED_FUNCTION = delete
+RC_NULL
+RC_OVERRIDE & RC_OVERRIDDEN_VIRTUAL
+RC_CONSTEXPR

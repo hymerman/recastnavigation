@@ -20,6 +20,7 @@
 #define NAVMESHPRUNETOOL_H
 
 #include "Sample.h"
+#include "RecastDefines.h"
 
 // Prune navmesh to accessible locations from a point.
 
@@ -36,16 +37,16 @@ public:
 	NavMeshPruneTool();
 	virtual ~NavMeshPruneTool();
 	
-	virtual int type() { return TOOL_NAVMESH_PRUNE; }
-	virtual void init(Sample* sample);
-	virtual void reset();
-	virtual void handleMenu();
-	virtual void handleClick(const float* s, const float* p, bool shift);
-	virtual void handleToggle();
-	virtual void handleStep();
-	virtual void handleUpdate(const float dt);
-	virtual void handleRender();
-	virtual void handleRenderOverlay(double* proj, double* model, int* view);
+	RC_OVERRIDDEN_VIRTUAL int type() RC_OVERRIDE { return TOOL_NAVMESH_PRUNE; }
+	RC_OVERRIDDEN_VIRTUAL void init(Sample* sample) RC_OVERRIDE;
+	RC_OVERRIDDEN_VIRTUAL void reset() RC_OVERRIDE;
+	RC_OVERRIDDEN_VIRTUAL void handleMenu() RC_OVERRIDE;
+	RC_OVERRIDDEN_VIRTUAL void handleClick(const float* s, const float* p, bool shift) RC_OVERRIDE;
+	RC_OVERRIDDEN_VIRTUAL void handleToggle() RC_OVERRIDE;
+	RC_OVERRIDDEN_VIRTUAL void handleStep() RC_OVERRIDE;
+	RC_OVERRIDDEN_VIRTUAL void handleUpdate(const float dt) RC_OVERRIDE;
+	RC_OVERRIDDEN_VIRTUAL void handleRender() RC_OVERRIDE;
+	RC_OVERRIDDEN_VIRTUAL void handleRenderOverlay(double* proj, double* model, int* view) RC_OVERRIDE;
 
 private:
 	// Explicitly disabled copy constructor and copy assignment operator.

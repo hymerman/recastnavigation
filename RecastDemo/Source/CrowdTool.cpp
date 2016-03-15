@@ -96,9 +96,9 @@ static void getAgentBounds(const dtCrowdAgent* ag, float* bmin, float* bmax)
 }
 
 CrowdToolState::CrowdToolState() :
-	m_sample(0),
-	m_nav(0),
-	m_crowd(0),
+	m_sample(RC_NULL),
+	m_nav(RC_NULL),
+	m_crowd(RC_NULL),
 	m_targetRef(0),
 	m_run(true)
 {
@@ -861,8 +861,8 @@ void CrowdToolState::updateTick(const float dt)
 
 
 CrowdTool::CrowdTool() :
-	m_sample(0),
-	m_state(0),
+	m_sample(RC_NULL),
+	m_state(RC_NULL),
 	m_mode(TOOLMODE_CREATE)
 {
 }

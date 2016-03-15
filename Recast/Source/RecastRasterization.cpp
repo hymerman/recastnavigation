@@ -49,7 +49,7 @@ static rcSpan* allocSpan(rcHeightfield& hf)
 		// Create new page.
 		// Allocate memory for the new pool.
 		rcSpanPool* pool = (rcSpanPool*)rcAlloc(sizeof(rcSpanPool), RC_ALLOC_PERM);
-		if (!pool) return 0;
+		if (!pool) return RC_NULL;
 
 		// Add the pool into the list of pools.
 		pool->next = hf.pools;
@@ -95,7 +95,7 @@ static bool addSpan(rcHeightfield& hf, const int x, const int y,
 	s->smin = smin;
 	s->smax = smax;
 	s->area = area;
-	s->next = 0;
+	s->next = RC_NULL;
 	
 	// Empty cell, add the first span.
 	if (!hf.spans[idx])
@@ -103,7 +103,7 @@ static bool addSpan(rcHeightfield& hf, const int x, const int y,
 		hf.spans[idx] = s;
 		return true;
 	}
-	rcSpan* prev = 0;
+	rcSpan* prev = RC_NULL;
 	rcSpan* cur = hf.spans[idx];
 	
 	// Insert and merge spans.

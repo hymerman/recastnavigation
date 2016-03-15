@@ -19,6 +19,7 @@
 #ifndef RECAST_H
 #define RECAST_H
 
+
 /// The value of PI used by Recast.
 static const float RC_PI = 3.14159265f;
 
