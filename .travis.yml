@@ -1,12 +1,13 @@
+dist: trusty
 sudo: false
+group: beta
 
 language: cpp
 
 # Build with gcc and clang.
 compiler:
   - gcc
-# Disable clang for now since it seems there's a problem using it with fast fp math; it's likely Travis' ancient environment that's at fault.
-#  - clang
+  - clang
 
 # Build both debug and release configurations, through use of an environment variable in the build matrix.
 env:
@@ -19,20 +20,20 @@ install:
   - export PREFIX=$PWD/dummyprefix
   - export PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig
   - export PATH=$PATH:$PWD/dummyprefix/bin
-  - wget https://www.libsdl.org/release/SDL2-2.0.4.tar.gz -O SDL2.tar.gz
+  - wget https://www.libsdl.org/release/SDL2-2.0.5.tar.gz -O SDL2.tar.gz
   - tar -xzf SDL2.tar.gz
-  - cd SDL2-2.0.4
+  - cd SDL2-2.0.5
   - ./configure --prefix=$PREFIX
   - make -j5
   - make install
   - cd ..
   # Download and build premake5 from source; the Travis environment doesn't have the right version of glibc6 for the prebuilt binaries to work.
-  - wget https://github.com/premake/premake-core/releases/download/v5.0.0-alpha6/premake-5.0.0-alpha6-src.zip -O premake.zip
+  - wget https://github.com/premake/premake-core/releases/download/v5.0.0-alpha10/premake-5.0.0-alpha10-src.zip -O premake.zip
   - unzip premake.zip
-  - cd premake-5.0.0-alpha6/build/gmake.unix
+  - cd premake-5.0.0-alpha10/build/gmake.unix
   - make config=release
   - cd ../../..
-  - mv premake-5.0.0-alpha6/bin/release/premake5 premake5
+  - mv premake-5.0.0-alpha10/bin/release/premake5 premake5
 
 # Run premake to generate makefiles.
 # Have to cd into directory and back out since premake5 doesn't appear to accept a directory argument.
