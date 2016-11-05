@@ -627,7 +627,7 @@ void CrowdToolState::handleRenderOverlay(double* proj, double* model, int* view)
 		drawGraph(&gp, &m_crowdTotalTime, 1, "Total", duRGBA(255,128,0,255));
 		
 		gp.setRect(300, 10, 500, 50, 8);
-		gp.setValueRange(0.0f, 2000.0f, 1, "");
+		gp.setValueRange(0.0f, 2000.0f, 1, "12345678901234567890");
 		drawGraph(&gp, &m_crowdSampleCount, 0, "Sample Count", duRGBA(96,96,96,128));
 	}
 	

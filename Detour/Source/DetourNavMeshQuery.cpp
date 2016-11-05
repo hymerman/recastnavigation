@@ -612,11 +612,10 @@ dtStatus dtNavMeshQuery::closestPointOnPolyBoundary(dtPolyRef ref, const float* 
 	float verts[DT_VERTS_PER_POLYGON*3];	
 	float edged[DT_VERTS_PER_POLYGON];
 	float edget[DT_VERTS_PER_POLYGON];
-	int nv = 0;
-	for (int i = 0; i < (int)poly->vertCount; ++i)
+	int nv = poly->vertCount;
+	for (int i = 0; i < nv; ++i)
 	{
-		dtVcopy(&verts[nv*3], &tile->verts[poly->verts[i]*3]);
-		nv++;
+		dtVcopy(&verts[i*3], &tile->verts[poly->verts[i]*3]);
 	}		
 	
 	bool inside = dtDistancePtPolyEdgesSqr(pos, verts, nv, edged, edget);

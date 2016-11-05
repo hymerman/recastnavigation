@@ -2,6 +2,7 @@
 #include "imgui.h"
 #include <string.h>
 #include <stdio.h>
+#include <algorithm>
 
 #ifdef WIN32
 #	define snprintf _snprintf
@@ -54,7 +55,8 @@ void GraphParams::setValueRange(float ivmin, float ivmax, int indiv, const char*
 	vmin = ivmin;
 	vmax = ivmax;
 	ndiv = indiv;
-	strcpy(units, iunits);
+	strncpy(units, iunits, std::min(strlen(iunits) + 1, sizeof(units)));
+	units[sizeof(units) - 1] = '\0';
 }
 
 void drawGraphBackground(const GraphParams* p)
