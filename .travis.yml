@@ -17,13 +17,14 @@ addons:
   apt:
     sources:
     - ubuntu-toolchain-r-test
+    - llvm-toolchain-precise-3.6
     packages:
-    - gcc-4.8
-    - g++-4.8
-    - clang
+    - gcc-5
+    - g++-5
+    - clang-3.8
 
 before_install:
-  - if [ "$CC" == "gcc" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
+  - if [ "$CC" == "gcc" ]; then export CXX="g++-5" CC="gcc-5"; fi
 
 install:
   # Download and build SDL2 from source.
@@ -54,7 +55,7 @@ before_script:
 # Run make in the directory containing generated makefiles, on the configuration specified by the environment variable.
 script:
   - export ORIG_CXXFLAGS=$CXXFLAGS
-  - if [ "$CC" == "gcc-4.8" ]; then export CXXFLAGS="$ORIG_CXXFLAGS -std=c++03"; fi
+  - if [ "$CC" == "gcc-5" ]; then export CXXFLAGS="$ORIG_CXXFLAGS -std=c++03"; fi
   - if [ "$CC" == "clang" ]; then export CXXFLAGS="$ORIG_CXXFLAGS -std=c++03 -D__extern_always_inline=\"extern __always_inline\""; fi
   - make -C RecastDemo/Build/gmake -f DebugUtils.make config=$CONFIGURATION
   - make -C RecastDemo/Build/gmake -f Detour.make config=$CONFIGURATION
@@ -62,7 +63,7 @@ script:
   - make -C RecastDemo/Build/gmake -f DetourTileCache.make config=$CONFIGURATION
   - make -C RecastDemo/Build/gmake -f Recast.make config=$CONFIGURATION
 
-  - if [ "$CC" == "gcc-4.8" ]; then export CXXFLAGS="$ORIG_CXXFLAGS -std=gnu++1y"; fi
-  - if [ "$CC" == "clang" ]; then export CXXFLAGS="$ORIG_CXXFLAGS -std=gnu++1y -D__extern_always_inline=\"extern __always_inline\""; fi
+  - if [ "$CC" == "gcc-5" ]; then export CXXFLAGS="$ORIG_CXXFLAGS -std=gnu++14"; fi
+  - if [ "$CC" == "clang" ]; then export CXXFLAGS="$ORIG_CXXFLAGS -std=gnu++14 -D__extern_always_inline=\"extern __always_inline\""; fi
   - make -C RecastDemo/Build/gmake config=$CONFIGURATION
   - RecastDemo/Bin/Tests
