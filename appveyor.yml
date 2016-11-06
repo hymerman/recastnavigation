@@ -5,27 +5,32 @@ os:
 
 environment:
   matrix:
+  - TOOLSET: vs2010
   - TOOLSET: vs2015
+
+platform:
+  - x86
+  - x64
+
+configuration:
+  - Debug
+  - Release
 
 install:
   # Download Premake
-  - ps: Start-FileDownload 'https://github.com/premake/premake-core/releases/download/v5.0.0-alpha7/premake-5.0.0-alpha7-windows.zip' 'premake.zip'
+  - ps: Start-FileDownload 'https://github.com/premake/premake-core/releases/download/v5.0.0-alpha10/premake-5.0.0-alpha10-windows.zip' 'premake.zip'
   
   # Extract it in-place; premake5.exe is at the top level.
   - 7z x premake.zip
 
   # Download SDL.
-  - ps: Start-FileDownload 'https://www.libsdl.org/release/SDL2-devel-2.0.4-VC.zip' 'RecastDemo/Contrib/SDL.zip'
+  - ps: Start-FileDownload 'https://www.libsdl.org/release/SDL2-devel-2.0.5-VC.zip' 'RecastDemo/Contrib/SDL.zip'
   
   # Extract it, put it in the right place, and rename it.
-  - cd RecastDemo\Contrib && 7z x SDL.zip && ren SDL2-2.0.4 SDL && cd ..\..
+  - cd RecastDemo\Contrib && 7z x SDL.zip && ren SDL2-2.0.5 SDL && cd ..\..
   
   # Generate solution files using premake.
-  - cd RecastDemo && "../premake5.exe" %TOOLSET% --appveyor && cd ..
-
-configuration:
-  - Debug
-  - Release
+  - cd RecastDemo && "../premake5.exe" %TOOLSET% && cd ..
 
 build:
   project: RecastDemo/Build/$(TOOLSET)/recastnavigation.sln

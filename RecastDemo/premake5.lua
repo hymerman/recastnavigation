@@ -12,6 +12,8 @@ newoption {
 }
 
 solution "recastnavigation"
+	platforms { "x86", "x64" }
+	
 	configurations { 
 		"Debug",
 		"Release"
@@ -56,9 +58,6 @@ project "DebugUtils"
 		"../DebugUtils/Include/*.h",
 		"../DebugUtils/Source/*.cpp"
 	}
-	configuration { "appveyor" }
-		toolset "v90" -- Compile with VS2008 toolchain to enforce C++03 compatibility.
-		flags { "StaticRuntime" }
 
 project "Detour"
 	language "C++"
@@ -70,9 +69,6 @@ project "Detour"
 		"../Detour/Include/*.h", 
 		"../Detour/Source/*.cpp" 
 	}
-	configuration { "appveyor" }
-		toolset "v90" -- Compile with VS2008 toolchain to enforce C++03 compatibility.
-		flags { "StaticRuntime" }
 
 project "DetourCrowd"
 	language "C++"
@@ -86,9 +82,6 @@ project "DetourCrowd"
 		"../DetourCrowd/Include/*.h",
 		"../DetourCrowd/Source/*.cpp"
 	}
-	configuration { "appveyor" }
-		toolset "v90" -- Compile with VS2008 toolchain to enforce C++03 compatibility.
-		flags { "StaticRuntime" }
 
 project "DetourTileCache"
 	language "C++"
@@ -102,9 +95,6 @@ project "DetourTileCache"
 		"../DetourTileCache/Include/*.h",
 		"../DetourTileCache/Source/*.cpp"
 	}
-	configuration { "appveyor" }
-		toolset "v90" -- Compile with VS2008 toolchain to enforce C++03 compatibility.
-		flags { "StaticRuntime" }
 
 project "Recast"
 	language "C++"
@@ -116,9 +106,6 @@ project "Recast"
 		"../Recast/Include/*.h",
 		"../Recast/Source/*.cpp" 
 	}
-	configuration { "appveyor" }
-		toolset "v90" -- Compile with VS2008 toolchain to enforce C++03 compatibility.
-		flags { "StaticRuntime" }
 
 project "RecastDemo"
 	language "C++"
@@ -170,7 +157,7 @@ project "RecastDemo"
 	-- windows library cflags and libs
 	configuration { "windows" }
 		includedirs { "../RecastDemo/Contrib/SDL/include" }
-		libdirs { "../RecastDemo/Contrib/SDL/lib/x86" }
+		libdirs { "../RecastDemo/Contrib/SDL/lib/%{cfg.platform}" }
 		debugdir "../RecastDemo/Bin/"
 		links { 
 			"glu32",
@@ -180,7 +167,7 @@ project "RecastDemo"
 		}
 		postbuildcommands {
 			-- Copy the SDL2 dll to the Bin folder.
-			'{COPY} "%{wks.location}../../Contrib/SDL/lib/x86/SDL2.dll" "%{cfg.targetdir}"'
+			'{COPY} "%{wks.location}../../Contrib/SDL/lib/%{cfg.platform}/SDL2.dll" "%{cfg.targetdir}"'
 		}
 
 	-- mac includes and libs
@@ -250,7 +237,7 @@ project "Tests"
 	-- windows library cflags and libs
 	configuration { "windows" }
 		includedirs { "../RecastDemo/Contrib/SDL/include" }
-		libdirs { "../RecastDemo/Contrib/SDL/lib/x86" }
+		libdirs { "../RecastDemo/Contrib/SDL/lib/%{cfg.platform}" }
 		debugdir "../RecastDemo/Bin/"
 		links { 
 			"glu32",
