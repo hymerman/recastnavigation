@@ -1,29 +1,30 @@
 dist: trusty
 sudo: required
 
-language: cpp
+language: generic
+os:osx
 
-# Build with gcc and clang.
-compiler:
-  - gcc
-  - clang
+matrix:
+  include:
+    - os: linux
+      env: COMPILER_NAME=g++ CXX=g++-5 CC=gcc-5 CONFIGURATION=debug
+      addons:
+        apt:
+          source: &sources
+            - llvm-toolchain-precise-3.8
+            - llvm-toolchain-precise-3.7
+            - llvm-toolchain-precise-3.6
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
 
-# Build both debug and release configurations, through use of an environment variable in the build matrix.
-env:
-  - CONFIGURATION=debug
-  - CONFIGURATION=release
-addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    - llvm-toolchain-precise-3.6
-    packages:
-    - gcc-5
-    - g++-5
-    - clang-3.8
-
-before_install:
-  - if [ "$CC" == "gcc" ]; then export CXX="g++-5" CC="gcc-5"; fi
+    - os: linux
+      env: COMPILER_NAME=clang++ CXX=clang++-3.8 CC=clang-3.8 CONFIGURATION=debug
+      addons:
+        apt:
+          sources: *sources
+          packages:
+            - clang-3.8
 
 install:
   # Download and build SDL2 from source.
@@ -54,15 +55,15 @@ before_script:
 # Run make in the directory containing generated makefiles, on the configuration specified by the environment variable.
 script:
   - export ORIG_CXXFLAGS=$CXXFLAGS
-  - if [ "$CC" == "gcc-5" ]; then export CXXFLAGS="$ORIG_CXXFLAGS -std=c++03"; fi
-  - if [ "$CC" == "clang" ]; then export CXXFLAGS="$ORIG_CXXFLAGS -std=c++03 -D__extern_always_inline=\"extern __always_inline\""; fi
+  - if [ "$COMPILER_NAME" == "g++" ]; then export CXXFLAGS="$ORIG_CXXFLAGS -std=c++03"; fi
+  - if [ "$COMPILER_NAME" == "clang++" ]; then export CXXFLAGS="$ORIG_CXXFLAGS -std=c++03 -D__extern_always_inline=\"extern __always_inline\""; fi
   - make -C RecastDemo/Build/gmake -f DebugUtils.make config=$CONFIGURATION
   - make -C RecastDemo/Build/gmake -f Detour.make config=$CONFIGURATION
   - make -C RecastDemo/Build/gmake -f DetourCrowd.make config=$CONFIGURATION
   - make -C RecastDemo/Build/gmake -f DetourTileCache.make config=$CONFIGURATION
   - make -C RecastDemo/Build/gmake -f Recast.make config=$CONFIGURATION
 
-  - if [ "$CC" == "gcc-5" ]; then export CXXFLAGS="$ORIG_CXXFLAGS -std=gnu++14"; fi
-  - if [ "$CC" == "clang" ]; then export CXXFLAGS="$ORIG_CXXFLAGS -std=gnu++14 -D__extern_always_inline=\"extern __always_inline\""; fi
+  - if [ "$COMPILER_NAME" == "g++" ]; then export CXXFLAGS="$ORIG_CXXFLAGS -std=c++14"; fi
+  - if [ "$COMPILER_NAME" == "clang++" ]; then export CXXFLAGS="$ORIG_CXXFLAGS -std=c++14 -D__extern_always_inline=\"extern __always_inline\""; fi
   - make -C RecastDemo/Build/gmake config=$CONFIGURATION
   - RecastDemo/Bin/Tests
