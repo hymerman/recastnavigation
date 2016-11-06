@@ -5,8 +5,6 @@ os:
 
 environment:
   matrix:
-  - TOOLSET: vs2010
-  - TOOLSET: vs2013
   - TOOLSET: vs2015
 
 install:
@@ -23,7 +21,7 @@ install:
   - cd RecastDemo\Contrib && 7z x SDL.zip && ren SDL2-2.0.4 SDL && cd ..\..
   
   # Generate solution files using premake.
-  - cd RecastDemo && "../premake5.exe" %TOOLSET% && cd ..
+  - cd RecastDemo && "../premake5.exe" %TOOLSET% --appveyor && cd ..
 
 configuration:
   - Debug

@@ -6,6 +6,11 @@
 local action = _ACTION or ""
 local todir = "Build/" .. action
 
+newoption {
+	trigger     = "appveyor",
+	description = "Whether the project is being built on appveyor.",
+}
+
 solution "recastnavigation"
 	configurations { 
 		"Debug",
@@ -51,6 +56,9 @@ project "DebugUtils"
 		"../DebugUtils/Include/*.h",
 		"../DebugUtils/Source/*.cpp"
 	}
+	configuration { "appveyor" }
+		toolset "v90" -- Compile with VS2008 toolchain to enforce C++03 compatibility.
+		flags { "StaticRuntime" }
 
 project "Detour"
 	language "C++"
@@ -62,6 +70,9 @@ project "Detour"
 		"../Detour/Include/*.h", 
 		"../Detour/Source/*.cpp" 
 	}
+	configuration { "appveyor" }
+		toolset "v90" -- Compile with VS2008 toolchain to enforce C++03 compatibility.
+		flags { "StaticRuntime" }
 
 project "DetourCrowd"
 	language "C++"
@@ -75,6 +86,9 @@ project "DetourCrowd"
 		"../DetourCrowd/Include/*.h",
 		"../DetourCrowd/Source/*.cpp"
 	}
+	configuration { "appveyor" }
+		toolset "v90" -- Compile with VS2008 toolchain to enforce C++03 compatibility.
+		flags { "StaticRuntime" }
 
 project "DetourTileCache"
 	language "C++"
@@ -88,6 +102,9 @@ project "DetourTileCache"
 		"../DetourTileCache/Include/*.h",
 		"../DetourTileCache/Source/*.cpp"
 	}
+	configuration { "appveyor" }
+		toolset "v90" -- Compile with VS2008 toolchain to enforce C++03 compatibility.
+		flags { "StaticRuntime" }
 
 project "Recast"
 	language "C++"
@@ -99,6 +116,9 @@ project "Recast"
 		"../Recast/Include/*.h",
 		"../Recast/Source/*.cpp" 
 	}
+	configuration { "appveyor" }
+		toolset "v90" -- Compile with VS2008 toolchain to enforce C++03 compatibility.
+		flags { "StaticRuntime" }
 
 project "RecastDemo"
 	language "C++"
@@ -135,6 +155,8 @@ project "RecastDemo"
 	-- linux library cflags and libs
 	configuration { "linux", "gmake" }
 		buildoptions { 
+			"-std=c++14",
+			"-stdlib=libc++",
 			"`pkg-config --cflags sdl2`",
 			"`pkg-config --cflags gl`",
 			"`pkg-config --cflags glu`" 
@@ -165,7 +187,7 @@ project "RecastDemo"
 	configuration { "macosx" }
 		kind "ConsoleApp" -- xcode4 failes to run the project if using WindowedApp
 		includedirs { "/Library/Frameworks/SDL2.framework/Headers" }
-		buildoptions { "-Wunused-value -Wshadow -Wreorder -Wsign-compare -Wall" }
+		buildoptions { "-std=c++14 -stdlib=libc++ -Weverything" }
 		links { 
 			"OpenGL.framework", 
 			"SDL2.framework",
@@ -213,6 +235,8 @@ project "Tests"
 	-- linux library cflags and libs
 	configuration { "linux", "gmake" }
 		buildoptions { 
+			"-std=c++14",
+			"-stdlib=libc++",
 			"`pkg-config --cflags sdl2`",
 			"`pkg-config --cflags gl`",
 			"`pkg-config --cflags glu`" 
@@ -239,7 +263,7 @@ project "Tests"
 	configuration { "macosx" }
 		kind "ConsoleApp"
 		includedirs { "/Library/Frameworks/SDL2.framework/Headers" }
-		buildoptions { "-Wunused-value -Wshadow -Wreorder -Wsign-compare -Wall" }
+		buildoptions { "-std=c++14 -stdlib=libc++ -Weverything" }
 		links { 
 			"OpenGL.framework", 
 			"SDL2.framework",
